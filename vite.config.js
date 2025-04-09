@@ -18,7 +18,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-components': ['./src/components/ui'],
+          'ui-components': ['./src/components/ui/index.js'],
           'utils': ['./src/utils/apiUtils', './src/utils/perfUtils']
         }
       }
