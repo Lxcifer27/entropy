@@ -322,7 +322,7 @@ const TranslatePage = () => {
       
       setError("");
       setHistorySaved(false);
-      startLoading("Translating your code with Gemini AI...");
+      startLoading("Translating your code with Entropy AI...");
       
       let translatedResult;
       

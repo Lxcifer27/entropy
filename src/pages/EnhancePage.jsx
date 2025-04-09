@@ -336,7 +336,7 @@ const EnhancePage = () => {
   const enhanceCodeWithAPI = useCallback(async () => {
     try {
       setError("");
-      startLoading("Enhancing your code with Gemini AI...");
+      startLoading("Enhancing your code with Entropy AI...");
       
       try {
         // Try using Gemini directly first

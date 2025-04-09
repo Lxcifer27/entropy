@@ -147,36 +147,62 @@ const FeedbackDisplay = ({ feedback, className = "" }) => {
               const match = /language-(\w+)/.exec(className || '');
               const language = match ? match[1] : 'javascript';
               
-              return !inline ? (
-                <div className="relative group">
-                  <div className="absolute -top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
-                      }}
-                      className="px-2 py-1 text-xs bg-gray-800 text-gray-300 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                    >
-                      Copy
-                    </button>
+              // For inline code - simple span-based element that can go inside paragraphs
+              if (inline) {
+                return (
+                  <code className="bg-gray-800 px-1.5 py-0.5 rounded text-gray-200" {...props}>
+                    {children}
+                  </code>
+                );
+              }
+              
+              // For code blocks - rendered as a standalone block
+              const codeBlock = (
+                <SyntaxHighlighter
+                  language={language}
+                  style={{
+                    ...vscDarkPlus,
+                    'code[class*="language-"]': {
+                      ...vscDarkPlus['code[class*="language-"]'],
+                      background: 'transparent'
+                    },
+                    'pre[class*="language-"]': {
+                      ...vscDarkPlus['pre[class*="language-"]'],
+                      background: 'transparent'
+                    }
+                  }}
+                  PreTag="div"
+                  CodeTag="code"
+                  customStyle={{
+                    margin: '0',
+                    padding: '1em',
+                    borderRadius: '0.5em',
+                    backgroundColor: 'rgb(30, 41, 59)',
+                    background: 'rgb(30, 41, 59)'
+                  }}
+                  {...props}
+                >
+                  {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+              );
+              
+              // Return the code block wrapped in a fragment to avoid nesting issues
+              return (
+                <>
+                  <div className="not-prose relative group my-4">
+                    <div className="absolute -top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
+                        }}
+                        className="px-2 py-1 text-xs bg-gray-800 text-gray-300 rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                      >
+                        Copy
+                      </button>
+                    </div>
+                    {codeBlock}
                   </div>
-                  <SyntaxHighlighter
-                    language={language}
-                    style={vscDarkPlus}
-                    customStyle={{
-                      margin: '1.5em 0',
-                      padding: '1em',
-                      borderRadius: '0.5em',
-                      backgroundColor: 'rgb(30, 41, 59)'
-                    }}
-                    {...props}
-                  >
-                    {String(children).replace(/\n$/, '')}
-                  </SyntaxHighlighter>
-                </div>
-              ) : (
-                <code className="bg-gray-800 px-1.5 py-0.5 rounded text-gray-200" {...props}>
-                  {children}
-                </code>
+                </>
               );
             },
             // Style tables
@@ -222,9 +248,13 @@ const FeedbackDisplay = ({ feedback, className = "" }) => {
             ol({ node, ...props }) {
               return <ol className="list-decimal list-inside space-y-2 my-4" {...props} />;
             },
-            // Style paragraphs
-            p({ node, ...props }) {
-              return <p className="my-4 text-gray-300 leading-relaxed" {...props} />;
+            // Style paragraphs - simplified to avoid nesting issues
+            p({ children, ...props }) {
+              return (
+                <div className="my-4 text-gray-300 leading-relaxed" {...props}>
+                  {children}
+                </div>
+              );
             },
             // Style links
             a({ node, ...props }) {
@@ -241,6 +271,11 @@ const FeedbackDisplay = ({ feedback, className = "" }) => {
             div({ node, className, ...props }) {
               // Preserve HTML classes in divs
               return <div className={className} {...props} />;
+            },
+            // Handle pre tags to avoid nesting issues
+            pre({ node, ...props }) {
+              // Use a div instead of pre directly to avoid nesting issues
+              return <div className="pre-wrapper" {...props} />;
             },
           }}
         >

@@ -95,12 +95,19 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-800">
+        <div className="col-2 mt-8 pt-8 border-t border-gray-800">
           <p className="text-center text-gray-400">
             © {currentYear} Entropy AI. All rights reserved.
             <span className="mx-2">•</span>
             <Link to="/privacy" className="hover:text-cyan-500 transition-colors">
               Privacy Policy
+            </Link>
+          </p>
+          <p className="text-right text-gray-400">
+            Made by
+            <span className="mx-1"></span>
+            <Link to="https://github.com/mrpriyam" className="hover:text-cyan-500 transition-colors">
+              lxcifer27 ♡
             </Link>
           </p>
         </div>
