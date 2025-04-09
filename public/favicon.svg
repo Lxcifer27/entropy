@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background Circle -->
+  <circle cx="32" cy="32" r="30" fill="#111827" />
+  
+  <!-- Letter E for Entropy with gradient -->
+  <path d="M20 18h24v6H26v5h16v6H26v5h24v6H20z" fill="url(#gradient1)" />
+  
+  <!-- Orbital/atom-like circle representing AI and entropy -->
+  <circle cx="32" cy="32" r="24" fill="none" stroke="url(#gradient2)" stroke-width="2" stroke-dasharray="4,4" />
+  
+  <!-- Define gradients -->
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee" />
+      <stop offset="100%" stop-color="#0891b2" />
+    </linearGradient>
+    <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#0891b2" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Animation for entropy effect -->
+  <animateTransform
+    attributeName="transform"
+    attributeType="XML"
+    type="rotate"
+    from="0 32 32"
+    to="360 32 32"
+    dur="10s"
+    repeatCount="indefinite" />
+</svg> 
