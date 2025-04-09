@@ -1,0 +1,785 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --scrollbar-thumb: #334155;
+  --scrollbar-track: #1e293b;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  /* display: flex; */
+  /* place-items: center; */
+  min-width: 320px;
+  min-height: 100vh;
+  @apply bg-gray-900 text-white antialiased;
+  overflow-x: hidden;
+}
+
+nav{
+  background-color: #3f3f3f;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+textarea:focus-visible,
+textarea:focus,
+textarea:active {
+  border: none !important;
+  outline: none !important;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-gray-950 text-white font-sans antialiased;
+  }
+  
+  ::selection {
+    @apply bg-cyan-500/30 text-white;
+  }
+  
+  .prose code {
+    @apply text-cyan-400;
+  }
+  
+  .code-editor {
+    font-family: 'Fira Code', 'Fira Mono', monospace;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #1f2937;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 5px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #60a5fa;
+  }
+  
+  /* Loading animation */
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Transition animations */
+  .transition-transform {
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+  
+  .hover\:scale-105:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Editor */
+  .code-editor-wrapper {
+    position: relative;
+  }
+  
+  .code-editor-wrapper textarea {
+    outline: none !important;
+    box-shadow: none !important;
+    cursor: text !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+  }
+  
+  /* Editor fixes for overflow */
+  .code-editor, 
+  .code-editor pre, 
+  .code-editor textarea {
+    min-height: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Basic styling for fallback when syntax highlighting isn't available */
+  .code-editor textarea {
+    color: #f8f8f2 !important;
+    font-family: 'Fira Code', 'Fira Mono', monospace !important;
+    resize: none !important;
+    caret-color: #fff !important;
+  }
+  
+  /* Read-only mode styling */
+  .code-editor textarea.read-only {
+    cursor: text !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    -webkit-text-fill-color: #f8f8f2 !important;
+  }
+  
+  /* Better focus styles */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50;
+  }
+}
+
+/* Fix for mobile webkit overflow issues */
+@supports (-webkit-touch-callout: none) {
+  .h-screen {
+    height: -webkit-fill-available;
+  }
+}
+
+/* Smooth page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes progress {
+  0% { width: 0%; }
+  50% { width: 70%; }
+  100% { width: 100%; }
+}
+
+/* Animation utility classes */
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.5s ease-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.5s ease-out;
+}
+
+.animate-progress {
+  animation: progress 1.5s infinite ease-in-out;
+}
+
+.animate-delay-150 {
+  animation-delay: 150ms;
+}
+
+.animate-delay-300 {
+  animation-delay: 300ms;
+}
+
+/* Add reverse animation direction */
+.animate-reverse {
+  animation-direction: reverse;
+}
+
+/* Add new blur in/out animation */
+@keyframes blurIn {
+  from { opacity: 0; filter: blur(10px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+.animate-blurIn {
+  animation: blurIn 0.5s ease-out forwards;
+}
+
+/* Add shimmer effect animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.05) 50%, 
+    rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Section fade-in on scroll */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Page wrapper for consistent padding/margins */
+.page-wrapper {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-300;
+}
+
+.card-hover:hover {
+  @apply transform -translate-y-1 shadow-lg;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Focus outline for better accessibility */
+:focus {
+  @apply outline-none ring-2 ring-cyan-500 ring-offset-2 ring-offset-gray-900;
+}
+
+/* Add efficient animations and transitions that won't impact performance */
+@layer utilities {
+  /* Optimized animations with will-change hints for browser optimization */
+  .animate-spin {
+    animation: spin 1s linear infinite;
+    will-change: transform;
+  }
+  
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    will-change: opacity;
+  }
+  
+  .animate-progress {
+    animation: progress 2.5s ease-in-out infinite;
+    will-change: transform, width;
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+    background: linear-gradient(to right, transparent, rgba(96, 165, 250, 0.3), transparent);
+    background-size: 200% 100%;
+    will-change: background-position;
+  }
+  
+  .animate-blurIn {
+    animation: blurIn 0.3s ease-out forwards;
+    will-change: opacity, filter;
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.4s ease-out forwards;
+    will-change: opacity;
+  }
+
+  .animate-reverse {
+    animation-direction: reverse;
+  }
+  
+  .animate-delay-150 {
+    animation-delay: 150ms;
+  }
+  
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  /* Performance optimized hover effects */
+  .hover-lift {
+    transition: transform 0.2s ease-out;
+    will-change: transform;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Optimization for low-motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-spin,
+    .animate-pulse,
+    .animate-progress,
+    .animate-shimmer,
+    .animate-blurIn,
+    .animate-fadeIn {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
+
+/* Optimized keyframes */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes progress {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 70%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes blurIn {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Base styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-gray-950 text-white font-sans antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  ::selection {
+    @apply bg-cyan-500/30 text-white;
+  }
+  
+  .prose code {
+    @apply text-cyan-400;
+  }
+  
+  .code-editor {
+    font-family: 'Fira Code', 'Fira Mono', monospace;
+  }
+  
+  /* Performance-optimized scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #1f2937;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 4px;
+    border: 1px solid #1f2937;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #60a5fa;
+  }
+  
+  /* Editor */
+  .code-editor-wrapper {
+    position: relative;
+    transform: translateZ(0); /* Hardware acceleration */
+  }
+  
+  .code-editor-wrapper textarea {
+    outline: none !important;
+    box-shadow: none !important;
+    cursor: text !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+  }
+  
+  /* Editor fixes for overflow */
+  .code-editor, 
+  .code-editor pre, 
+  .code-editor textarea {
+    min-height: 100% !important;
+    height: 100% !important;
+    overscroll-behavior: contain; /* Prevent unwanted scroll chaining */
+  }
+
+  /* Basic styling for fallback when syntax highlighting isn't available */
+  .code-editor textarea {
+    color: #f8f8f2 !important;
+    font-family: 'Fira Code', 'Fira Mono', monospace !important;
+    resize: none !important;
+    caret-color: #fff !important;
+  }
+  
+  /* Read-only mode styling */
+  .code-editor textarea.read-only {
+    cursor: text !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    -webkit-text-fill-color: #f8f8f2 !important;
+  }
+  
+  /* Better focus styles */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50;
+  }
+  
+  /* Optimize image rendering */
+  img {
+    image-rendering: auto;
+    backface-visibility: hidden; /* Prevent flicker on transform */
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  /* Improve touch targets on mobile */
+  button, 
+  .button, 
+  a, 
+  select, 
+  input[type="submit"] {
+    min-height: 44px; /* Apple's recommended minimum */
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Fix for iOS viewport height issue */
+  .h-screen {
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+  }
+  
+  /* Fix for mobile safari issues */
+  .code-editor-wrapper {
+    -webkit-overflow-scrolling: touch; /* smooth scrolling */
+  }
+  
+  /* Improve typography readability on small screens */
+  body {
+    font-size: 16px; /* minimum for comfortable reading */
+  }
+}
+
+/* Smooth page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Code editor fixes for ReviewPage specifically */
+#review .code-editor textarea,
+.code-editor-review textarea {
+  cursor: text !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  -webkit-text-fill-color: #f8f8f2 !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Editor */
+.code-editor-wrapper {
+  position: relative;
+  transform: translateZ(0); /* Hardware acceleration */
+}
+
+/* Layout fixes */
+.main-content {
+  padding-top: 5rem; /* Adjust based on header height */
+}
+
+/* Improved spacing and layout */
+.page-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Prevent content from pushing into header */
+.header-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background-color: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(8px);
+}
+
+/* Content wrapper to prevent overlap */
+.content-wrapper {
+  position: relative;
+  padding-top: var(--header-height, 4rem);
+  min-height: calc(100vh - var(--header-height, 4rem));
+}
+
+/* Performance optimizations */
+* {
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize animations */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Code editor performance improvements */
+.code-editor-wrapper {
+  contain: content;
+  will-change: transform;
+}
+
+.code-editor pre {
+  text-rendering: optimizeLegibility;
+}
+
+/* Scrollbar optimizations */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+/* Optimize touch interactions */
+@media (hover: none) {
+  .touch-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+}
+
+/* Custom scrollbar styles */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(129, 140, 248, 0.5) rgba(17, 24, 39, 0.1);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(17, 24, 39, 0.1);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(129, 140, 248, 0.5);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(129, 140, 248, 0.7);
+}
+
+/* Ensure content wrapper takes full height */
+.content-wrapper {
+  min-height: calc(100vh - 4rem); /* Adjust based on your header/footer height */
+}
+
+/* Card height styles */
+.card-container {
+  height: calc(100vh - 16rem); /* Adjust based on your layout */
+  display: flex;
+  flex-direction: column;
+}
+
+.card-content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* Code editor container */
+.code-editor-container {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
