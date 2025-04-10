@@ -72,7 +72,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="py-12 px-6 lg:px-0">
+    <div className="mt-12 py-12 px-6 lg:px-0">
       <div className="max-w-md mx-auto">
         <Card className="shadow-xl">
           <div className="text-center mb-8">
