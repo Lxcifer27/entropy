@@ -1,7 +1,8 @@
 import { useEffect, lazy, Suspense, useCallback, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import { useLoading } from "./context/LoadingContext";
+import { preloadModel } from "./utils/geminiService";
 
 // Lazy load pages for better performance
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -14,6 +15,21 @@ const SignupPage = lazy(() => import("./pages/SignupPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const ChatHistoryPage = lazy(() => import("./pages/ChatHistoryPage"));
+
+// Route observer to preload resources when navigating to specific routes
+const RouteObserver = () => {
+  const location = useLocation();
+  
+  useEffect(() => {
+    // Preload Gemini model when navigating to the Review page
+    if (location.pathname === '/review' || location.pathname === '/enhance' || location.pathname === '/translate') {
+      console.log(`Preloading AI model for ${location.pathname} page`);
+      preloadModel().catch(err => console.warn('Failed to preload model:', err));
+    }
+  }, [location.pathname]);
+  
+  return null;
+};
 
 // Enhanced page transition loader with progress indication
 const PageLoader = () => {
@@ -98,16 +114,22 @@ function App() {
         }, 5000); // 5 second timeout
       });
       
+      // Preload AI model on app start to reduce initial Review page lag
+      const modelPreload = preloadModel().catch(err => 
+        console.warn('Failed to preload AI model on startup:', err)
+      );
+      
       // Race between actual preloading and timeout
       await Promise.race([
         Promise.all([
           HomePage,
-          ReviewPage
+          ReviewPage,
+          modelPreload
         ].map(component => {
-          if (component._payload && component._payload._status === 1) {
+          if (component && component._payload && component._payload._status === 1) {
             return Promise.resolve(); // Already loaded
           }
-          return component._payload._result;
+          return component && component._payload ? component._payload._result : component;
         })),
         timeoutPromise
       ]);
@@ -155,6 +177,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <RouteObserver />
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={

@@ -57,24 +57,24 @@ const Navbar = () => {
     <nav className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
       scrolled ? 'bg-gray-900/95 backdrop-blur-sm shadow-md' : 'bg-gray-900'
     } border-b border-gray-800`}>
-      <div className="mx-auto px-6 lg:px-12 max-w-7xl">
-        <div className="flex h-16 items-center justify-between">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="flex h-14 sm:h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center group">
-              <div className="text-2xl font-bold text-white transition-transform duration-300 group-hover:scale-105">
+              <div className="text-xl sm:text-2xl font-bold text-white transition-transform duration-300 group-hover:scale-105">
                 Entropy <span className="text-cyan-500">AI</span>
               </div>
             </Link>
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-8">
-            <div className="flex space-x-6">
+          <div className="hidden md:flex md:items-center">
+            <div className="flex items-center space-x-2 lg:space-x-6 mr-2 lg:mr-4">
               <NavLink 
                 to="/review" 
                 className={({ isActive }) => 
-                  `text-gray-300 hover:text-white transition-colors duration-200 relative group ${
+                  `flex items-center px-2 py-1 text-sm lg:text-base text-gray-300 hover:text-white transition-colors duration-200 relative group ${
                     isActive ? 'text-white' : ''
                   }`
                 }
@@ -85,7 +85,7 @@ const Navbar = () => {
               <NavLink 
                 to="/enhance" 
                 className={({ isActive }) => 
-                  `text-gray-300 hover:text-white transition-colors duration-200 relative group ${
+                  `flex items-center px-2 py-1 text-sm lg:text-base text-gray-300 hover:text-white transition-colors duration-200 relative group ${
                     isActive ? 'text-white' : ''
                   }`
                 }
@@ -96,7 +96,7 @@ const Navbar = () => {
               <NavLink 
                 to="/snapshot" 
                 className={({ isActive }) => 
-                  `text-gray-300 hover:text-white transition-colors duration-200 relative group ${
+                  `flex items-center px-2 py-1 text-sm lg:text-base text-gray-300 hover:text-white transition-colors duration-200 relative group ${
                     isActive ? 'text-white' : ''
                   }`
                 }
@@ -107,7 +107,7 @@ const Navbar = () => {
               <NavLink 
                 to="/translate" 
                 className={({ isActive }) => 
-                  `text-gray-300 hover:text-white transition-colors duration-200 relative group ${
+                  `flex items-center px-2 py-1 text-sm lg:text-base text-gray-300 hover:text-white transition-colors duration-200 relative group ${
                     isActive ? 'text-white' : ''
                   }`
                 }
@@ -119,7 +119,7 @@ const Navbar = () => {
                 <NavLink 
                   to="/history" 
                   className={({ isActive }) => 
-                    `text-gray-300 hover:text-white transition-colors duration-200 relative group ${
+                    `flex items-center px-2 py-1 text-sm lg:text-base text-gray-300 hover:text-white transition-colors duration-200 relative group ${
                       isActive ? 'text-white' : ''
                     }`
                   }
@@ -130,12 +130,12 @@ const Navbar = () => {
               )}
             </div>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               {currentUser ? (
                 <div className="relative">
                   <button
                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                    className="flex items-center justify-center h-8 w-8 rounded-full bg-cyan-600 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    className="flex items-center justify-center h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-cyan-600 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500"
                     aria-expanded={profileDropdownOpen}
                   >
                     {getUserInitial()}
@@ -152,13 +152,6 @@ const Navbar = () => {
                           {currentUser.email}
                         </div>
                       </div>
-                      {/* <Link 
-                        to="/history" 
-                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
-                        onClick={() => setProfileDropdownOpen(false)}
-                      >
-                        Chat History
-                      </Link> */}
                       <div className="flex justify-center px-4 py-2">
                         <button 
                           onClick={handleLogout}
@@ -208,107 +201,101 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <div 
-        className={`md:hidden transform transition-all duration-300 ease-in-out ${
-          mobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
-        }`}
-      >
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-800">
-          <NavLink 
-            to="/review" 
-            className={({ isActive }) => 
-              `block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md ${
-                isActive ? 'bg-gray-800 text-white' : ''
-              }`
-            }
-            onClick={closeMenu}
-          >
-            Review
-          </NavLink>
-          <NavLink 
-            to="/enhance" 
-            className={({ isActive }) => 
-              `block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md ${
-                isActive ? 'bg-gray-800 text-white' : ''
-              }`
-            }
-            onClick={closeMenu}
-          >
-            Enhance
-          </NavLink>
-          <NavLink 
-            to="/snapshot" 
-            className={({ isActive }) => 
-              `block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md ${
-                isActive ? 'bg-gray-800 text-white' : ''
-              }`
-            }
-            onClick={closeMenu}
-          >
-            Snapshot
-          </NavLink>
-          <NavLink 
-            to="/translate" 
-            className={({ isActive }) => 
-              `block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md ${
-                isActive ? 'bg-gray-800 text-white' : ''
-              }`
-            }
-            onClick={closeMenu}
-          >
-            Translate
-          </NavLink>
-          {currentUser && (
+      {/* Mobile Menu - Compacted version */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-gray-900 shadow-lg max-h-[70vh] overflow-y-auto">
+          <div className="px-2 py-2 space-y-1 border-t border-gray-800">
             <NavLink 
-              to="/history" 
+              to="/review" 
               className={({ isActive }) => 
-                `block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md ${
+                `block px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-md ${
                   isActive ? 'bg-gray-800 text-white' : ''
                 }`
               }
               onClick={closeMenu}
             >
-              History
+              Review
             </NavLink>
-          )}
-        </div>
-        <div className="pt-4 pb-3 border-t border-gray-800">
-          {currentUser ? (
-            <div className="px-4 py-2">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="h-8 w-8 rounded-full bg-cyan-600 flex items-center justify-center text-white">
+            <NavLink 
+              to="/enhance" 
+              className={({ isActive }) => 
+                `block px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-md ${
+                  isActive ? 'bg-gray-800 text-white' : ''
+                }`
+              }
+              onClick={closeMenu}
+            >
+              Enhance
+            </NavLink>
+            <NavLink 
+              to="/snapshot" 
+              className={({ isActive }) => 
+                `block px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-md ${
+                  isActive ? 'bg-gray-800 text-white' : ''
+                }`
+              }
+              onClick={closeMenu}
+            >
+              Snapshot
+            </NavLink>
+            <NavLink 
+              to="/translate" 
+              className={({ isActive }) => 
+                `block px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-md ${
+                  isActive ? 'bg-gray-800 text-white' : ''
+                }`
+              }
+              onClick={closeMenu}
+            >
+              Translate
+            </NavLink>
+            {currentUser && (
+              <NavLink 
+                to="/history" 
+                className={({ isActive }) => 
+                  `block px-3 py-1.5 text-sm text-gray-300 hover:text-white hover:bg-gray-800 rounded-md ${
+                    isActive ? 'bg-gray-800 text-white' : ''
+                  }`
+                }
+                onClick={closeMenu}
+              >
+                History
+              </NavLink>
+            )}
+          </div>
+          <div className="py-2 px-2 border-t border-gray-800">
+            {currentUser ? (
+              <div className="flex items-center justify-between px-3 py-2">
+                <div className="flex items-center">
+                  <div className="h-6 w-6 rounded-full bg-cyan-600 flex items-center justify-center text-white text-sm">
                     {getUserInitial()}
                   </div>
-                </div>
-                <div className="ml-3">
-                  <div className="text-base font-medium text-white truncate">
-                    {currentUser.email}
+                  <div className="ml-2">
+                    <div className="text-sm text-white truncate max-w-[150px]">
+                      {currentUser.email}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="mt-3 px-2 space-y-2">
                 <button 
                   onClick={handleLogout}
-                  className="w-full flex justify-center items-center px-4 py-2 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-white bg-gray-800 hover:bg-gray-700"
+                  className="ml-2 px-3 py-1 text-xs text-white bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded"
                 >
                   Sign Out
                 </button>
               </div>
-            </div>
-          ) : (
-            <div className="px-2 space-y-2">
-              <Link to="/login" onClick={closeMenu}>
-                <Button variant="outline" fullWidth>Sign In</Button>
-              </Link>
-              <Link to="/signup" onClick={closeMenu}>
-                <Button variant="primary" fullWidth>Sign Up</Button>
-              </Link>
-            </div>
-          )}
+            ) : (
+              <div className="flex space-x-2 px-2">
+                <Link to="/login" onClick={closeMenu} className="flex-1">
+                  <Button variant="outline" size="sm" fullWidth>Sign In</Button>
+                </Link>
+                <Link to="/signup" onClick={closeMenu} className="flex-1">
+                  <Button variant="primary" size="sm" fullWidth>Sign Up</Button>
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 };

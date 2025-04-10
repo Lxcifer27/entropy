@@ -3,13 +3,14 @@ import { useLoading } from "../context/LoadingContext";
 import { useAuth } from "../context/AuthContext";
 import { saveChatHistory } from "../utils/firestoreService";
 import { memoize, debounce } from "../utils/perfUtils";
-import { generateCodeReview } from "../utils/geminiService";
+import { generateCodeReview, preloadModel } from "../utils/geminiService";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import CodeEditor from "../components/CodeEditor";
 import FeedbackDisplay from "../components/FeedbackDisplay";
 import SectionHeader from "../components/ui/SectionHeader";
 import { Link } from "react-router-dom";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 const LANGUAGES = [
   { value: "javascript", label: "JavaScript" },
@@ -62,9 +63,33 @@ const ReviewPage = () => {
   const [review, setReview] = useState("");
   const [error, setError] = useState("");
   const [historySaved, setHistorySaved] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
   const { startLoading, stopLoading } = useLoading();
   const { currentUser } = useAuth();
   const editorContainerRef = useRef(null);
+
+  // Preload resources and initialize page
+  useEffect(() => {
+    const preloadResources = async () => {
+      try {
+        // Explicitly preload the Gemini model to reduce initial lag
+        const preloadPromise = Promise.all([
+          // Preload the Gemini model
+          preloadModel(),
+          // Wait for the editor to initialize
+          new Promise(resolve => setTimeout(resolve, 300))
+        ]);
+        
+        await preloadPromise;
+      } catch (error) {
+        console.error("Error preloading resources:", error);
+      } finally {
+        setPageLoading(false);
+      }
+    };
+
+    preloadResources();
+  }, []);
 
   // Resize observer for editor container
   useEffect(() => {
@@ -261,7 +286,7 @@ Keep up the great work! 🚀`;
       setHistorySaved(false);
       
       startLoading("Analyzing your code with Entropy AI...");
-      const analysis = await generateAIReview(code, language);
+      const analysis = await generateCodeReview(code, language);
       setReview(analysis);
       
       // Save to chat history if user is logged in
@@ -285,6 +310,24 @@ Keep up the great work! 🚀`;
       stopLoading();
     }
   }, [code, language, startLoading, stopLoading, currentUser]);
+
+  if (pageLoading) {
+    return (
+      <div className="content-wrapper">
+        <div className="page-container py-8 px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            title="Code Review & Analysis"
+            subtitle="Get professional insights and improvement suggestions powered by Entropy AI"
+            className="animate-fade-in"
+          />
+          <div className="flex flex-col items-center justify-center h-64 mt-8">
+            <LoadingSpinner size="lg" />
+            <p className="mt-4 text-gray-400">Initializing code review...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="content-wrapper">

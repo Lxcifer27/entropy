@@ -4,6 +4,36 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(API_KEY);
 
+// Cache for models to avoid recreating them
+const modelCache = new Map();
+
+/**
+ * Preloads a model to reduce initial load time
+ * @param {string} modelName - The model name to preload
+ * @returns {Promise<void>}
+ */
+export const preloadModel = async (modelName = "gemini-1.5-pro") => {
+  try {
+    // Check if we've already cached this model
+    if (!modelCache.has(modelName)) {
+      const model = genAI.getGenerativeModel({ model: modelName });
+      modelCache.set(modelName, model);
+      
+      // Send a minimal request to initialize the connection
+      // This uses minimal tokens but establishes the connection
+      await model.generateContent({
+        contents: [{ role: "user", parts: [{ text: "Hello" }] }],
+        generationConfig: {
+          maxOutputTokens: 1,
+          temperature: 0,
+        },
+      });
+    }
+  } catch (error) {
+    console.warn("Model preloading failed, will initialize on first use", error);
+  }
+};
+
 /**
  * Configures a Gemini model with specific parameters
  * @param {string} modelName - The model name to use
@@ -11,7 +41,14 @@ const genAI = new GoogleGenerativeAI(API_KEY);
  * @returns {object} - Configured model
  */
 const configureModel = (modelName = "gemini-1.5-pro", params = {}) => {
-  const model = genAI.getGenerativeModel({ model: modelName });
+  // Use cached model if available
+  let model;
+  if (modelCache.has(modelName)) {
+    model = modelCache.get(modelName);
+  } else {
+    model = genAI.getGenerativeModel({ model: modelName });
+    modelCache.set(modelName, model);
+  }
   
   // Set default configuration if not provided
   const defaultConfig = {
@@ -26,6 +63,9 @@ const configureModel = (modelName = "gemini-1.5-pro", params = {}) => {
   
   return { model, generationConfig };
 };
+
+// Preload the model immediately to speed up first use
+preloadModel().catch(console.error);
 
 /**
  * Generate a code review using Gemini AI
